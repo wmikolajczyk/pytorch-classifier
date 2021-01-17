@@ -95,5 +95,5 @@ if __name__ == "__main__":
     torch.save(net.state_dict(), output_path)
 
     # evaluate
-    accuracy = evaluate()
+    accuracy = evaluate(testloader, net)
     logger.info(f"accuracy: {accuracy}")
