@@ -20,8 +20,12 @@ def evaluate(testloader: torch.utils.data.DataLoader, net: Net):
         for data in testloader:
             images, labels = data
             outputs = net(images)
-            _, predicted = torch.max(outputs.data, 1)  # 1 - "dimension" with activation energy for each class
-            total += labels.size(0)  # 0 - "dimension" depends on batch_size in DataLoader
+            _, predicted = torch.max(
+                outputs.data, 1
+            )  # 1 - "dimension" with activation energy for each class
+            total += labels.size(
+                0
+            )  # 0 - "dimension" depends on batch_size in DataLoader
             correct += (predicted == labels).sum().item()
 
     return correct * 100 / total
@@ -29,17 +33,35 @@ def evaluate(testloader: torch.utils.data.DataLoader, net: Net):
 
 if __name__ == "__main__":
     # load data
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-    ])
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True, num_workers=2)
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+    )
+    trainset = torchvision.datasets.CIFAR10(
+        root="./data", train=True, download=True, transform=transform
+    )
+    trainloader = torch.utils.data.DataLoader(
+        trainset, batch_size=4, shuffle=True, num_workers=2
+    )
 
-    testset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False, num_workers=2)
+    testset = torchvision.datasets.CIFAR10(
+        root="./data", train=True, download=True, transform=transform
+    )
+    testloader = torch.utils.data.DataLoader(
+        testset, batch_size=4, shuffle=False, num_workers=2
+    )
 
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    classes = (
+        "plane",
+        "car",
+        "bird",
+        "cat",
+        "deer",
+        "dog",
+        "frog",
+        "horse",
+        "ship",
+        "truck",
+    )
 
     # configure model, loss, optimizer
     net = Net()
@@ -64,14 +86,14 @@ if __name__ == "__main__":
             # log statistics every 2000 mini-batches
             running_loss += loss.item()
             if i % 2000 == 1999:
-                logger.info(f'epoch: {epoch}, mini-batch: {i}, loss: {loss:.4f}')
+                logger.info(f"epoch: {epoch}, mini-batch: {i}, loss: {loss:.4f}")
                 running_loss = 0.0
-    logger.info('finished training')
+    logger.info("finished training")
 
     # save model
-    output_path = 'model.pth'
+    output_path = "model.pth"
     torch.save(net.state_dict(), output_path)
 
     # evaluate
     accuracy = evaluate()
-    logger.info(f'accuracy: {accuracy}')
+    logger.info(f"accuracy: {accuracy}")
